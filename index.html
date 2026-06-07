@@ -1,0 +1,2043 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0F0A1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Das Wortreich</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap">
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — Das Wortreich
+═══════════════════════════════════════════════════ */
+:root {
+  /* Core palette */
+  --night:     #0F0A1A;
+  --night2:    #1A1230;
+  --night3:    #251C42;
+  --parchment: #F5EDD8;
+  --parch2:    #EDE0C4;
+  --parch3:    #D4C4A0;
+  --gold:      #F0C040;
+  --gold2:     #D4A020;
+  --gold3:     #A87820;
+  --white:     #FDFAF4;
+  --muted:     rgba(245,237,216,.5);
+
+  /* Realm colours — each wing has its own identity */
+  --c-stadt:   #E84855; /* Die Stadtchronik      — vivid red */
+  --c-arbeit:  #3D9BE9; /* Das Arbeitszimmer     — strong blue */
+  --c-heil:    #2EC4B6; /* Die Heilkunde         — teal */
+  --c-fam:     #FF6B6B; /* Das Familienbuch      — warm coral */
+  --c-reise:   #FFD166; /* Die Reisekammer       — sunny yellow */
+  --c-haus:    #9B72CF; /* Das Hausarchiv        — violet */
+  --c-natur:   #4CAF50; /* Die Naturkunde        — green */
+  --c-kunst:   #FF9F1C; /* Die Kunstgalerie      — orange */
+  --c-tafel:   #F06595; /* Die Tafelkunde        — pink */
+  --c-schatz:  #F0C040; /* Die Schatzkammer      — gold */
+  --c-ideen:   #A78BFA; /* Das Ideenbuch         — lavender */
+  --c-mensch:  #06D6A0; /* Das Menschenbuch      — emerald */
+  --c-seele:   #FF6B9D; /* Die Seelenkunde       — magenta */
+  --c-welt:    #4BC8E8; /* Der Weltatlas         — sky */
+  --c-tat:     #FF4500; /* Die Tatkraft          — fiery orange-red */
+  --c-farbe:   #B4E33D; /* Die Farbenlehre       — lime */
+  --c-sprache: #7EC8E3; /* Die Sprachschule      — light blue */
+  --c-portal:  #FFD700; /* Das Eingangsportal    — bright gold */
+
+  /* Shadows */
+  --shadow-sm: 0 2px 8px rgba(0,0,0,.4);
+  --shadow-md: 0 4px 20px rgba(0,0,0,.5);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,.6);
+  --shadow-glow: 0 0 20px rgba(240,192,64,.3);
+
+  /* Typography */
+  --display: 'Cinzel', Georgia, serif;
+  --body:    'Nunito', sans-serif;
+
+  /* Easing */
+  --spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:  cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --graceful:  cubic-bezier(0.65, 0, 0.35, 1);
+
+  --r: 16px;
+}
+
+/* ─── Reset ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { height: 100%; font-size: 16px; -webkit-text-size-adjust: 100%; }
+body {
+  min-height: 100%;
+  background: var(--night);
+  color: var(--parchment);
+  font-family: var(--body);
+  font-weight: 400;
+  line-height: 1.5;
+  overscroll-behavior: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Starfield background */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse at 20% 20%, rgba(61,155,233,.12) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(167,139,250,.10) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 50%, rgba(240,192,64,.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+select { font: inherit; }
+
+/* ─── App shell ─────────────────────────────────── */
+.app { max-width: 480px; margin: 0 auto; min-height: 100dvh; display: flex; flex-direction: column; position: relative; z-index: 1; }
+
+/* ─── Screens ───────────────────────────────────── */
+.screen { display: none; flex-direction: column; flex: 1; animation: enterScreen .35s var(--ease-out) both; }
+.screen.active { display: flex; }
+@keyframes enterScreen { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+
+/* ═══════════════════════════════════════════════════
+   HOME SCREEN — The Library
+═══════════════════════════════════════════════════ */
+#home { padding-bottom: env(safe-area-inset-bottom, 16px); }
+
+.library-header {
+  padding: 20px 20px 0;
+  text-align: center;
+  position: relative;
+}
+.realm-title {
+  font-family: var(--display);
+  font-size: 1.55rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  color: var(--gold);
+  text-shadow: 0 0 30px rgba(240,192,64,.4), 0 2px 4px rgba(0,0,0,.6);
+  animation: titleGlow 4s ease-in-out infinite;
+}
+@keyframes titleGlow {
+  0%,100% { text-shadow: 0 0 20px rgba(240,192,64,.3), 0 2px 4px rgba(0,0,0,.6); }
+  50%      { text-shadow: 0 0 40px rgba(240,192,64,.6), 0 2px 4px rgba(0,0,0,.6); }
+}
+.realm-subtitle {
+  font-size: .72rem;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--parch3);
+  margin-top: 2px;
+  opacity: .7;
+}
+
+/* XP bar area */
+.xp-section {
+  padding: 16px 20px 12px;
+  animation: enterUp .4s var(--ease-out) .1s both;
+}
+.xp-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; }
+.xp-level {
+  font-family: var(--display);
+  font-size: .85rem;
+  color: var(--gold);
+  letter-spacing: .06em;
+}
+.xp-points { font-size: .75rem; color: var(--parch3); }
+.xp-bar-track {
+  height: 8px;
+  background: var(--night3);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(240,192,64,.15);
+}
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold2), var(--gold));
+  border-radius: 4px;
+  transition: width .8s var(--graceful);
+  position: relative;
+  overflow: hidden;
+}
+.xp-bar-fill::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.3) 50%, transparent 100%);
+  animation: shimmer 2s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100% { transform: translateX(-100%); } 50% { transform: translateX(100%); } }
+
+/* Stats strip */
+.stats-strip {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 20px 16px;
+  animation: enterUp .4s var(--ease-out) .15s both;
+}
+.stat-gem {
+  background: var(--night2);
+  border: 1px solid rgba(240,192,64,.15);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.stat-gem::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: var(--gold);
+  opacity: .4;
+}
+.stat-gem-num {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  color: var(--gold);
+  line-height: 1;
+}
+.stat-gem-label { font-size: .63rem; text-transform: uppercase; letter-spacing: .1em; color: var(--parch3); margin-top: 3px; opacity: .7; }
+
+/* Daily quest banner */
+.quest-banner {
+  margin: 0 20px 16px;
+  background: linear-gradient(135deg, var(--night2) 0%, rgba(167,139,250,.15) 100%);
+  border: 1px solid rgba(167,139,250,.3);
+  border-radius: var(--r);
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  cursor: pointer;
+  transition: transform .15s, box-shadow .15s;
+  animation: enterUp .4s var(--ease-out) .2s both;
+  position: relative; overflow: hidden;
+}
+.quest-banner::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(167,139,250,.08) 100%);
+  pointer-events: none;
+}
+.quest-banner:active { transform: scale(.98); }
+.quest-icon { font-size: 1.8rem; flex-shrink: 0; }
+.quest-text { flex: 1; }
+.quest-label { font-size: .63rem; text-transform: uppercase; letter-spacing: .12em; color: #A78BFA; margin-bottom: 2px; }
+.quest-title { font-weight: 700; font-size: .9rem; color: var(--parchment); }
+.quest-meta { font-size: .75rem; color: var(--parch3); margin-top: 1px; }
+.quest-arrow { color: #A78BFA; font-size: 1.1rem; flex-shrink: 0; }
+
+/* Library grid */
+.library-label {
+  padding: 0 20px 10px;
+  font-size: .7rem;
+  text-transform: uppercase;
+  letter-spacing: .15em;
+  color: var(--parch3);
+  opacity: .6;
+  animation: enterUp .4s var(--ease-out) .25s both;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 0 20px 24px;
+  overflow-y: auto;
+}
+
+.wing-card {
+  background: var(--night2);
+  border-radius: 14px;
+  padding: 14px 10px 12px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid rgba(255,255,255,.06);
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s var(--spring), box-shadow .2s;
+  animation: enterUp .4s var(--ease-out) both;
+}
+.wing-card:active { transform: scale(.93); }
+.wing-card.awakened { border-color: rgba(255,255,255,.15); }
+.wing-card.mastered { border-color: var(--gold); }
+
+.wing-icon { font-size: 1.6rem; margin-bottom: 6px; display: block; transition: transform .3s var(--spring); }
+.wing-card:active .wing-icon { transform: scale(1.2) rotate(-5deg); }
+
+.wing-name {
+  font-size: .62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--parch3);
+  line-height: 1.3;
+}
+.wing-card.awakened .wing-name { color: var(--parchment); }
+
+.wing-progress-bar {
+  margin-top: 8px;
+  height: 3px;
+  background: rgba(255,255,255,.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.wing-progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width .6s var(--graceful);
+}
+
+.wing-badge {
+  position: absolute;
+  top: 6px; right: 6px;
+  font-size: .6rem;
+  font-weight: 800;
+  padding: 2px 5px;
+  border-radius: 6px;
+  background: var(--gold);
+  color: var(--night);
+  line-height: 1.2;
+}
+
+/* ═══════════════════════════════════════════════════
+   WING DETAIL / SESSION SETUP
+═══════════════════════════════════════════════════ */
+#wing-detail { padding-bottom: env(safe-area-inset-bottom, 16px); }
+
+.wing-hero {
+  padding: 20px 20px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.wing-hero-bg {
+  position: absolute; inset: 0;
+  opacity: .12;
+  transition: opacity .5s;
+}
+.wing-hero.awakened .wing-hero-bg { opacity: .18; }
+
+.back-btn {
+  position: absolute; left: 16px; top: 16px;
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; color: var(--parchment);
+  transition: background .15s, transform .15s;
+  z-index: 2;
+}
+.back-btn:active { transform: scale(.9); background: rgba(255,255,255,.15); }
+
+.wing-hero-icon { font-size: 3.5rem; display: block; margin-bottom: 10px; position: relative; z-index: 1; animation: floatBob 5s ease-in-out infinite; }
+@keyframes floatBob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+.wing-hero-title {
+  font-family: var(--display);
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: .06em;
+  position: relative; z-index: 1;
+  margin-bottom: 4px;
+}
+.wing-hero-subtitle { font-size: .78rem; color: var(--parch3); position: relative; z-index: 1; }
+.wing-hero-stats { display: flex; gap: 16px; justify-content: center; margin-top: 14px; position: relative; z-index: 1; }
+.wing-hero-stat { text-align: center; }
+.wing-hero-stat-num { font-family: var(--display); font-size: 1.2rem; line-height: 1; }
+.wing-hero-stat-label { font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: var(--parch3); opacity: .7; }
+
+/* Mode selector */
+.detail-section { padding: 0 20px 16px; }
+.detail-label { font-size: .68rem; text-transform: uppercase; letter-spacing: .15em; color: var(--parch3); opacity: .6; margin-bottom: 10px; }
+
+.mode-pills { display: flex; gap: 8px; }
+.mode-pill {
+  flex: 1; padding: 10px 8px;
+  border-radius: 12px;
+  background: var(--night2);
+  border: 1.5px solid rgba(255,255,255,.08);
+  font-size: .78rem; font-weight: 700;
+  color: var(--parch3);
+  text-align: center;
+  transition: all .2s;
+}
+.mode-pill.active { border-color: var(--gold); color: var(--gold); background: rgba(240,192,64,.08); }
+.mode-pill:active { transform: scale(.95); }
+
+.dir-pills { display: flex; gap: 8px; }
+.dir-pill {
+  flex: 1; padding: 8px 6px;
+  border-radius: 10px;
+  background: var(--night2);
+  border: 1.5px solid rgba(255,255,255,.08);
+  font-size: .72rem; font-weight: 600;
+  color: var(--parch3);
+  text-align: center;
+  transition: all .2s;
+}
+.dir-pill.active { border-color: currentColor; }
+.dir-pill:active { transform: scale(.95); }
+
+.filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.filter-pill {
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--night2);
+  border: 1.5px solid rgba(255,255,255,.08);
+  font-size: .72rem; font-weight: 600;
+  color: var(--parch3);
+  transition: all .2s;
+}
+.filter-pill.active { background: var(--night3); border-color: var(--gold); color: var(--gold); }
+.filter-pill:active { transform: scale(.95); }
+
+/* Launch quest button */
+.launch-btn {
+  margin: 4px 20px 0;
+  width: calc(100% - 40px);
+  padding: 18px;
+  border-radius: var(--r);
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  color: var(--night);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 24px rgba(240,192,64,.35);
+  transition: transform .2s var(--spring), box-shadow .2s;
+}
+.launch-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, var(--gold) 0%, #FFD700 50%, var(--gold2) 100%);
+  transition: opacity .2s;
+}
+.launch-btn span { position: relative; z-index: 1; }
+.launch-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(240,192,64,.45); }
+.launch-btn:active { transform: scale(.97); }
+.launch-count {
+  display: inline-block;
+  background: rgba(0,0,0,.2);
+  border-radius: 20px;
+  padding: 2px 10px;
+  font-size: .8rem;
+  margin-left: 8px;
+}
+
+/* ═══════════════════════════════════════════════════
+   STUDY SCREEN
+═══════════════════════════════════════════════════ */
+#study { overflow: hidden; }
+
+.study-top {
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 16px 10px;
+}
+.study-back {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem; flex-shrink: 0;
+  transition: background .15s, transform .15s;
+}
+.study-back:active { transform: scale(.88); }
+.study-progress-wrap { flex: 1; }
+.study-progress-track {
+  height: 6px;
+  background: var(--night3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.study-progress-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width .5s var(--graceful);
+}
+.study-counter { font-size: .78rem; color: var(--parch3); white-space: nowrap; flex-shrink: 0; }
+
+/* Streak flame */
+.streak-fire {
+  display: flex; align-items: center; gap: 3px;
+  font-size: .75rem; font-weight: 800;
+  color: var(--gold);
+  background: rgba(240,192,64,.1);
+  border: 1px solid rgba(240,192,64,.2);
+  border-radius: 20px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+  transition: transform .2s var(--spring);
+}
+.streak-fire.bump { animation: streakBump .4s var(--spring); }
+@keyframes streakBump { 0%,100% { transform: scale(1); } 50% { transform: scale(1.3); } }
+
+/* Card area */
+.card-stage {
+  flex: 1;
+  display: flex; align-items: center; justify-content: center;
+  padding: 8px 16px 4px;
+  perspective: 1200px;
+}
+
+.card-wrap { width: 100%; max-width: 440px; position: relative; }
+
+.vocab-card {
+  background: var(--night2);
+  border-radius: 22px;
+  padding: 28px 24px 24px;
+  min-height: 220px;
+  display: flex; flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: var(--shadow-lg), inset 0 1px 0 rgba(255,255,255,.06);
+  transition: transform .1s, box-shadow .1s;
+  cursor: pointer;
+}
+.vocab-card:active { transform: scale(.985) translateY(1px); box-shadow: var(--shadow-sm); }
+
+/* Realm colour strip at top of card */
+.card-stripe {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px;
+  border-radius: 22px 22px 0 0;
+}
+
+/* Large decorative realm icon behind card content */
+.card-realm-bg {
+  position: absolute;
+  right: -16px; bottom: -12px;
+  font-size: 7rem;
+  opacity: .06;
+  line-height: 1;
+  pointer-events: none;
+  filter: blur(2px);
+  transition: opacity .4s;
+}
+.vocab-card:hover .card-realm-bg { opacity: .1; }
+
+.card-top-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 18px;
+}
+.card-wing-pill {
+  font-size: .62rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  padding: 3px 10px; border-radius: 20px;
+  opacity: .85;
+}
+.card-fav {
+  margin-left: auto;
+  font-size: 1.2rem;
+  transition: transform .2s var(--spring), opacity .15s;
+  opacity: .5;
+}
+.card-fav.active { opacity: 1; }
+.card-fav:active { transform: scale(1.4) rotate(20deg); }
+
+.card-prompt {
+  font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .12em;
+  color: var(--parch3); opacity: .6;
+  margin-bottom: 6px;
+}
+.card-article {
+  font-size: 1rem;
+  font-style: italic;
+  opacity: .7;
+  margin-bottom: 2px;
+}
+.card-main-word {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 7vw, 2rem);
+  font-weight: 900;
+  letter-spacing: .02em;
+  color: var(--parchment);
+  line-height: 1.2;
+}
+
+/* Answer reveal */
+.card-answer-area {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .3s var(--ease-out), transform .3s var(--ease-out);
+  pointer-events: none;
+}
+.card-answer-area.revealed { opacity: 1; transform: none; pointer-events: auto; }
+
+.card-answer-word {
+  font-family: var(--display);
+  font-size: clamp(1.1rem, 5vw, 1.5rem);
+  font-weight: 700;
+  color: var(--parch2);
+  margin-bottom: 10px;
+  font-style: italic;
+}
+.card-example {
+  font-size: .8rem; color: var(--parch3); line-height: 1.5;
+  border-left: 2px solid rgba(255,255,255,.15);
+  padding-left: 10px;
+}
+.card-example strong { color: var(--parchment); font-weight: 600; }
+
+.generating-row {
+  display: flex; align-items: center; gap: 6px;
+  font-size: .75rem; color: var(--parch3); opacity: .6;
+}
+.dots { display: flex; gap: 3px; }
+.dots span {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--parch3);
+  animation: dotBounce 1.2s ease-in-out infinite;
+}
+.dots span:nth-child(2) { animation-delay: .2s; }
+.dots span:nth-child(3) { animation-delay: .4s; }
+@keyframes dotBounce { 0%,60%,100% { opacity: .2; transform: scale(.8); } 30% { opacity: 1; transform: scale(1); } }
+
+.tap-hint {
+  text-align: center;
+  font-size: .72rem; color: var(--parch3); opacity: .45;
+  margin-top: 10px;
+  animation: hintFade 1s ease 1.5s both;
+}
+@keyframes hintFade { from { opacity: 0; } to { opacity: .45; } }
+
+/* ─── Rating buttons ────────────────────────────── */
+.rating-area {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding: 10px 16px 16px;
+}
+.rating-btn {
+  padding: 12px 4px;
+  border-radius: 14px;
+  font-size: .72rem; font-weight: 700;
+  text-align: center;
+  transition: transform .15s var(--spring), opacity .15s;
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  border: 1.5px solid transparent;
+}
+.rating-btn:active { transform: scale(.88); }
+.r-again  { background: rgba(232,72,85,.15);  color: #E84855; border-color: rgba(232,72,85,.25); }
+.r-hard   { background: rgba(255,159,28,.12); color: #FF9F1C; border-color: rgba(255,159,28,.2); }
+.r-good   { background: rgba(46,196,182,.12); color: #2EC4B6; border-color: rgba(46,196,182,.2); }
+.r-easy   { background: rgba(240,192,64,.12); color: var(--gold); border-color: rgba(240,192,64,.25); }
+.r-icon { font-size: 1.1rem; }
+.r-label { font-size: .6rem; text-transform: uppercase; letter-spacing: .07em; }
+
+/* ─── Multiple choice ───────────────────────────── */
+.mc-choices {
+  display: flex; flex-direction: column;
+  gap: 8px;
+  padding: 6px 16px 16px;
+}
+.mc-choice {
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--night2);
+  border: 1.5px solid rgba(255,255,255,.08);
+  display: flex; align-items: center; gap: 12px;
+  font-size: .9rem;
+  transition: transform .12s, border-color .15s, background .15s;
+  box-shadow: var(--shadow-sm);
+}
+.mc-choice:active { transform: scale(.97); }
+.mc-choice.correct { border-color: #2EC4B6; background: rgba(46,196,182,.1); }
+.mc-choice.wrong   { border-color: #E84855; background: rgba(232,72,85,.1); }
+.mc-key {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: rgba(255,255,255,.08);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 800;
+  flex-shrink: 0; transition: background .15s;
+}
+.mc-choice.correct .mc-key { background: #2EC4B6; color: var(--night); }
+.mc-choice.wrong   .mc-key { background: #E84855; color: white; }
+.mc-text { font-family: var(--display); font-size: .88rem; font-style: italic; color: var(--parchment); }
+
+/* ═══════════════════════════════════════════════════
+   RESULTS SCREEN
+═══════════════════════════════════════════════════ */
+#results {
+  align-items: center; justify-content: center;
+  padding: 32px 24px env(safe-area-inset-bottom, 24px);
+  text-align: center;
+}
+.results-trophy {
+  font-size: 5rem;
+  animation: trophyDrop .6s var(--spring) .1s both;
+  margin-bottom: 12px;
+  display: block;
+}
+@keyframes trophyDrop { from { opacity: 0; transform: scale(.3) rotate(-15deg); } to { opacity: 1; transform: none; } }
+.results-title {
+  font-family: var(--display);
+  font-size: 1.6rem; font-weight: 900;
+  color: var(--gold);
+  letter-spacing: .06em;
+  margin-bottom: 6px;
+  animation: enterUp .4s var(--ease-out) .3s both;
+}
+.results-sub {
+  font-size: .88rem; color: var(--parch3);
+  margin-bottom: 28px;
+  animation: enterUp .4s var(--ease-out) .38s both;
+}
+.results-xp-gained {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(240,192,64,.12);
+  border: 1px solid rgba(240,192,64,.3);
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-weight: 800; color: var(--gold);
+  font-size: .9rem;
+  margin-bottom: 24px;
+  animation: enterUp .4s var(--ease-out) .44s both;
+}
+.results-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 10px; width: 100%;
+  margin-bottom: 28px;
+  animation: enterUp .4s var(--ease-out) .5s both;
+}
+.r-stat {
+  background: var(--night2);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: 14px;
+  padding: 16px 8px;
+}
+.r-stat-num { font-family: var(--display); font-size: 1.6rem; line-height: 1; margin-bottom: 4px; }
+.r-stat-label { font-size: .62rem; text-transform: uppercase; letter-spacing: .1em; color: var(--parch3); opacity: .7; }
+.results-actions { display: flex; flex-direction: column; gap: 10px; width: 100%; animation: enterUp .4s var(--ease-out) .56s both; }
+
+.btn-gold {
+  width: 100%; padding: 17px;
+  border-radius: var(--r);
+  font-family: var(--display);
+  font-size: .95rem; font-weight: 700; letter-spacing: .08em;
+  color: var(--night);
+  background: linear-gradient(135deg, var(--gold), #FFD700, var(--gold2));
+  box-shadow: 0 4px 20px rgba(240,192,64,.35);
+  transition: transform .2s var(--spring), box-shadow .2s;
+}
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(240,192,64,.45); }
+.btn-gold:active { transform: scale(.97); }
+
+.btn-ghost {
+  width: 100%; padding: 14px;
+  border-radius: var(--r);
+  font-size: .9rem; font-weight: 700;
+  color: var(--parch3);
+  background: var(--night2);
+  border: 1.5px solid rgba(255,255,255,.1);
+  transition: transform .15s, border-color .15s;
+}
+.btn-ghost:hover { border-color: rgba(255,255,255,.2); }
+.btn-ghost:active { transform: scale(.97); }
+
+/* ═══════════════════════════════════════════════════
+   CONFETTI + EFFECTS
+═══════════════════════════════════════════════════ */
+@keyframes confettiFall {
+  0%   { transform: translate(0,0) rotate(0deg); opacity: 1; }
+  100% { transform: translate(var(--tx), var(--ty)) rotate(var(--rot)); opacity: 0; }
+}
+.confetti-dot {
+  position: fixed; pointer-events: none; z-index: 9999;
+  width: 8px; height: 8px; border-radius: 2px;
+  animation: confettiFall .8s var(--ease-out) forwards;
+}
+
+@keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
+.shake { animation: shake .32s ease; }
+
+/* ─── Shared utilities ──────────────────────────── */
+@keyframes enterUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes pulse { 0%,100% { opacity: .6; } 50% { opacity: 1; } }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--night3); border-radius: 2px; }
+
+/* ═══════════════════════════════════════════════════
+   GIST SYNC UI
+═══════════════════════════════════════════════════ */
+
+/* Sync button in header */
+.sync-btn {
+  position: absolute; right: 16px; top: 14px;
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.1);
+  font-size: .7rem; font-weight: 700;
+  color: var(--parch3);
+  transition: background .15s, color .15s, transform .15s;
+  cursor: pointer;
+}
+.sync-btn:hover { background: rgba(255,255,255,.1); color: var(--parchment); }
+.sync-btn:active { transform: scale(.93); }
+.sync-btn.syncing .sync-icon { animation: spin .8s linear infinite; }
+.sync-btn.ok     { color: #2EC4B6; border-color: rgba(46,196,182,.3); }
+.sync-btn.err    { color: #E84855; border-color: rgba(232,72,85,.3); }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.sync-icon { font-size: .85rem; display: inline-block; }
+.sync-label { font-size: .65rem; }
+
+/* Setup modal overlay */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(10,6,20,.85);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: flex-end;
+  animation: overlayIn .25s ease both;
+}
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+.modal-overlay.hidden { display: none; }
+
+.modal-sheet {
+  width: 100%; max-width: 480px; margin: 0 auto;
+  background: var(--night2);
+  border-radius: 24px 24px 0 0;
+  padding: 28px 24px 40px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  animation: sheetUp .35s var(--spring) both;
+}
+@keyframes sheetUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.modal-handle {
+  width: 36px; height: 4px;
+  background: rgba(255,255,255,.15);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+.modal-title {
+  font-family: var(--display);
+  font-size: 1.2rem; font-weight: 900;
+  color: var(--gold);
+  letter-spacing: .04em;
+  margin-bottom: 6px;
+}
+.modal-subtitle { font-size: .82rem; color: var(--parch3); line-height: 1.5; margin-bottom: 20px; }
+.modal-subtitle a { color: var(--gold); text-decoration: none; }
+.modal-subtitle a:hover { text-decoration: underline; }
+
+.token-input-wrap { position: relative; margin-bottom: 12px; }
+.token-input {
+  width: 100%;
+  padding: 14px 48px 14px 16px;
+  border-radius: 12px;
+  background: var(--night3);
+  border: 1.5px solid rgba(255,255,255,.1);
+  color: var(--parchment);
+  font-family: 'Courier New', monospace;
+  font-size: .82rem;
+  outline: none;
+  transition: border-color .2s;
+}
+.token-input:focus { border-color: var(--gold); }
+.token-input::placeholder { color: var(--parch3); opacity: .5; font-family: var(--body); }
+.token-toggle {
+  position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+  font-size: .9rem; color: var(--parch3);
+  cursor: pointer; padding: 4px;
+  transition: color .15s;
+}
+.token-toggle:hover { color: var(--parchment); }
+
+.token-hint { font-size: .72rem; color: var(--parch3); opacity: .6; margin-bottom: 20px; line-height: 1.5; }
+
+.modal-actions { display: flex; flex-direction: column; gap: 8px; }
+
+.btn-modal-primary {
+  width: 100%; padding: 15px;
+  border-radius: 12px;
+  font-family: var(--display);
+  font-size: .9rem; font-weight: 700; letter-spacing: .06em;
+  color: var(--night);
+  background: linear-gradient(135deg, var(--gold), #FFD700);
+  box-shadow: 0 3px 16px rgba(240,192,64,.3);
+  transition: transform .2s var(--spring), opacity .2s;
+}
+.btn-modal-primary:disabled { opacity: .4; cursor: not-allowed; }
+.btn-modal-primary:not(:disabled):active { transform: scale(.97); }
+
+.btn-modal-ghost {
+  width: 100%; padding: 12px;
+  border-radius: 12px;
+  font-size: .85rem; font-weight: 600;
+  color: var(--parch3);
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,.08);
+  transition: border-color .15s, color .15s;
+}
+.btn-modal-ghost:hover { border-color: rgba(255,255,255,.2); color: var(--parchment); }
+.btn-modal-ghost:active { transform: scale(.97); }
+
+.modal-status {
+  font-size: .75rem; text-align: center; margin-top: 10px;
+  min-height: 18px;
+  transition: color .2s;
+}
+.modal-status.ok  { color: #2EC4B6; }
+.modal-status.err { color: #E84855; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ═══════════════════════════════════════════════
+     HOME — Die Bibliothek
+═══════════════════════════════════════════════════ -->
+<div class="screen active" id="home">
+  <div class="library-header">
+    <div class="realm-title">Das Wortreich</div>
+    <div class="realm-subtitle">Deine Wortschatzbibliothek</div>
+    <button class="sync-btn" id="sync-btn" title="Mit GitHub synchronisieren">
+      <span class="sync-icon">⟳</span>
+      <span class="sync-label" id="sync-label">Sync</span>
+    </button>
+  </div>
+
+  <div style="flex:1; overflow-y:auto;">
+    <!-- XP bar -->
+    <div class="xp-section">
+      <div class="xp-row">
+        <span class="xp-level" id="xp-level">Lehrling · Stufe 1</span>
+        <span class="xp-points" id="xp-points">0 / 100 XP</span>
+      </div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" id="xp-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-strip">
+      <div class="stat-gem"><div class="stat-gem-num" id="s-words">—</div><div class="stat-gem-label">Wörter</div></div>
+      <div class="stat-gem"><div class="stat-gem-num" id="s-streak">—</div><div class="stat-gem-label">Tage</div></div>
+      <div class="stat-gem"><div class="stat-gem-num" id="s-mastered">—</div><div class="stat-gem-label">Gemeistert</div></div>
+    </div>
+
+    <!-- Daily quest -->
+    <div class="quest-banner" id="daily-quest-btn">
+      <span class="quest-icon">⚔️</span>
+      <div class="quest-text">
+        <div class="quest-label">Tagesquest</div>
+        <div class="quest-title" id="quest-title">Lade...</div>
+        <div class="quest-meta" id="quest-meta"></div>
+      </div>
+      <span class="quest-arrow">›</span>
+    </div>
+
+    <!-- Wing grid -->
+    <div class="library-label">Die Flügel der Bibliothek</div>
+    <div class="library-grid" id="wing-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     WING DETAIL — Flügeldetail
+═══════════════════════════════════════════════════ -->
+<div class="screen" id="wing-detail">
+  <div class="wing-hero" id="wing-hero">
+    <div class="wing-hero-bg" id="wing-hero-bg"></div>
+    <button class="back-btn" id="back-to-library">←</button>
+    <span class="wing-hero-icon" id="wh-icon"></span>
+    <div class="wing-hero-title" id="wh-title"></div>
+    <div class="wing-hero-subtitle" id="wh-subtitle"></div>
+    <div class="wing-hero-stats">
+      <div class="wing-hero-stat"><div class="wing-hero-stat-num" id="wh-total"></div><div class="wing-hero-stat-label">Wörter</div></div>
+      <div class="wing-hero-stat"><div class="wing-hero-stat-num" id="wh-mastered"></div><div class="wing-hero-stat-label">Gemeistert</div></div>
+      <div class="wing-hero-stat"><div class="wing-hero-stat-num" id="wh-due"></div><div class="wing-hero-stat-label">Fällig</div></div>
+    </div>
+  </div>
+
+  <div style="flex:1; overflow-y:auto; padding-top: 4px;">
+    <div class="detail-section">
+      <div class="detail-label">Lernmodus</div>
+      <div class="mode-pills">
+        <button class="mode-pill active" data-mode="flashcard">🃏 Karteikarte</button>
+        <button class="mode-pill" data-mode="mc">⬡ Multiple Choice</button>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-label">Richtung</div>
+      <div class="dir-pills">
+        <button class="dir-pill active" data-dir="en-de" style="color: var(--c-arbeit)">Englisch → Deutsch</button>
+        <button class="dir-pill" data-dir="de-en" style="color: var(--c-natur)">Deutsch → Englisch</button>
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="detail-label">Filter</div>
+      <div class="filter-pills">
+        <button class="filter-pill active" data-filter="all">Alle</button>
+        <button class="filter-pill" data-filter="due">Fällig</button>
+        <button class="filter-pill" data-filter="new">Neu</button>
+        <button class="filter-pill" data-filter="weak">Schwach</button>
+        <button class="filter-pill" data-filter="fav">★ Favoriten</button>
+      </div>
+    </div>
+
+    <button class="launch-btn" id="launch-btn">
+      <span>Quest beginnen <span class="launch-count" id="launch-count">—</span></span>
+    </button>
+
+    <div style="height: 20px;"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     STUDY SCREEN
+═══════════════════════════════════════════════════ -->
+<div class="screen" id="study">
+  <div class="study-top">
+    <button class="study-back" id="study-back">←</button>
+    <div class="study-progress-wrap">
+      <div class="study-progress-track">
+        <div class="study-progress-fill" id="study-progress" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="study-counter" id="study-counter">1 / 20</div>
+    <div class="streak-fire" id="streak-display">🔥 <span id="streak-num">0</span></div>
+  </div>
+
+  <!-- Flashcard -->
+  <div id="fc-view">
+    <div class="card-stage">
+      <div class="card-wrap">
+        <div class="vocab-card" id="v-card">
+          <div class="card-stripe" id="card-stripe"></div>
+          <div class="card-realm-bg" id="card-realm-bg"></div>
+          <div class="card-top-row">
+            <span class="card-wing-pill" id="card-wing-pill"></span>
+            <button class="card-fav" id="card-fav">☆</button>
+          </div>
+          <div class="card-prompt" id="card-prompt">English</div>
+          <div class="card-article" id="card-article"></div>
+          <div class="card-main-word" id="card-word"></div>
+          <div class="card-answer-area" id="card-answer">
+            <div class="card-answer-word" id="card-answer-word"></div>
+            <div id="example-slot"></div>
+          </div>
+          <div class="tap-hint" id="tap-hint">Tippe zum Aufdecken</div>
+        </div>
+      </div>
+    </div>
+    <div class="rating-area" id="rating-area" style="display:none">
+      <button class="rating-btn r-again" data-r="1"><span class="r-icon">↩</span><span class="r-label">Nochmal</span></button>
+      <button class="rating-btn r-hard"  data-r="2"><span class="r-icon">〜</span><span class="r-label">Schwer</span></button>
+      <button class="rating-btn r-good"  data-r="3"><span class="r-icon">✓</span><span class="r-label">Gut</span></button>
+      <button class="rating-btn r-easy"  data-r="4"><span class="r-icon">✦</span><span class="r-label">Leicht</span></button>
+    </div>
+  </div>
+
+  <!-- Multiple choice -->
+  <div id="mc-view" style="display:none">
+    <div class="card-stage" style="padding-bottom:0">
+      <div class="card-wrap">
+        <div class="vocab-card" id="mc-card">
+          <div class="card-stripe" id="mc-stripe"></div>
+          <div class="card-realm-bg" id="mc-realm-bg"></div>
+          <div class="card-top-row">
+            <span class="card-wing-pill" id="mc-wing-pill"></span>
+            <button class="card-fav" id="mc-fav">☆</button>
+          </div>
+          <div class="card-prompt" id="mc-prompt">English</div>
+          <div class="card-article" id="mc-article"></div>
+          <div class="card-main-word" id="mc-word"></div>
+        </div>
+      </div>
+    </div>
+    <div class="mc-choices" id="mc-choices"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     RESULTS
+═══════════════════════════════════════════════════ -->
+<div class="screen" id="results">
+  <span class="results-trophy" id="r-trophy">🏆</span>
+  <div class="results-title" id="r-title">Gut gemacht!</div>
+  <div class="results-sub" id="r-sub">Quest abgeschlossen</div>
+  <div class="results-xp-gained" id="r-xp">+0 XP</div>
+  <div class="results-stats">
+    <div class="r-stat"><div class="r-stat-num" id="r-cards" style="color:var(--gold)">0</div><div class="r-stat-label">Karten</div></div>
+    <div class="r-stat"><div class="r-stat-num" id="r-correct" style="color:#2EC4B6">0</div><div class="r-stat-label">Richtig</div></div>
+    <div class="r-stat"><div class="r-stat-num" id="r-streak" style="color:var(--c-kunst)">0</div><div class="r-stat-label">Beste Serie</div></div>
+  </div>
+  <div class="results-actions">
+    <button class="btn-gold" id="r-again">Nochmal spielen</button>
+    <button class="btn-ghost" id="r-home">Zurück zur Bibliothek</button>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<!-- ═══════════════════════════════════════════════
+     GIST SETUP MODAL
+═══════════════════════════════════════════════════ -->
+<div class="modal-overlay hidden" id="sync-modal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">☁️ GitHub Sync</div>
+    <div class="modal-subtitle">
+      Speichere deinen Fortschritt in einem privaten GitHub Gist — so bleibt er auf allen Geräten erhalten.<br><br>
+      Du brauchst einen <strong>Personal Access Token</strong> mit dem Scope <code>gist</code>.<br>
+      <a href="https://github.com/settings/tokens/new?scopes=gist&description=wortreich-sync" target="_blank">→ Token jetzt erstellen</a>
+    </div>
+
+    <div class="token-input-wrap">
+      <input class="token-input" id="token-input" type="password"
+             placeholder="ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+             autocomplete="off" autocorrect="off" spellcheck="false">
+      <span class="token-toggle" id="token-toggle" title="Token anzeigen">👁</span>
+    </div>
+    <div class="token-hint">
+      Der Token wird nur auf diesem Gerät gespeichert und nie an Dritte weitergegeben. GitHub erhält nur den API-Aufruf zum Gist.
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-modal-primary" id="connect-btn">Verbinden & synchronisieren</button>
+      <button class="btn-modal-ghost" id="disconnect-btn" style="display:none">Token entfernen</button>
+      <button class="btn-modal-ghost" id="cancel-sync-btn">Abbrechen</button>
+    </div>
+    <div class="modal-status" id="modal-status"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+/* ═══════════════════════════════════════════════════════
+   WING DEFINITIONS — 18 realms of the library
+═══════════════════════════════════════════════════════ */
+const WINGS = {
+  'city and society':       { name: 'Die Stadtchronik',   icon: '🏛️',  color: 'var(--c-stadt)',   en: 'City & Society' },
+  'education and work':     { name: 'Das Arbeitszimmer',  icon: '📚',  color: 'var(--c-arbeit)',  en: 'Work & Study' },
+  'health and body':        { name: 'Die Heilkunde',      icon: '⚕️',  color: 'var(--c-heil)',    en: 'Health & Body' },
+  'family and relationships':{ name: 'Das Familienbuch',  icon: '🏠',  color: 'var(--c-fam)',     en: 'Family' },
+  'travel and leisure':     { name: 'Die Reisekammer',    icon: '🧳',  color: 'var(--c-reise)',   en: 'Travel' },
+  'home and objects':       { name: 'Das Hausarchiv',     icon: '🪑',  color: 'var(--c-haus)',    en: 'Home & Objects' },
+  'animals and nature':     { name: 'Die Naturkunde',     icon: '🌿',  color: 'var(--c-natur)',   en: 'Nature' },
+  'culture, media and art': { name: 'Die Kunstgalerie',   icon: '🎨',  color: 'var(--c-kunst)',   en: 'Art & Culture' },
+  'food and everyday life': { name: 'Die Tafelkunde',     icon: '🍽️',  color: 'var(--c-tafel)',   en: 'Food & Life' },
+  'money and banking':      { name: 'Die Schatzkammer',   icon: '💰',  color: 'var(--c-schatz)',  en: 'Money' },
+  'concepts and ideas':     { name: 'Das Ideenbuch',      icon: '💡',  color: 'var(--c-ideen)',   en: 'Ideas' },
+  'people and professions': { name: 'Das Menschenbuch',   icon: '👥',  color: 'var(--c-mensch)',  en: 'People' },
+  'emotions and qualities': { name: 'Die Seelenkunde',    icon: '💎',  color: 'var(--c-seele)',   en: 'Emotions' },
+  'places and travel':      { name: 'Der Weltatlas',      icon: '🗺️',  color: 'var(--c-welt)',    en: 'Places' },
+  'verbs':                  { name: 'Die Tatkraft',       icon: '⚡',  color: 'var(--c-tat)',     en: 'Verbs' },
+  'adjectives':             { name: 'Die Farbenlehre',    icon: '🌈',  color: 'var(--c-farbe)',   en: 'Adjectives' },
+  'language and communication':{ name: 'Die Sprachschule',icon: '💬',  color: 'var(--c-sprache)', en: 'Language' },
+  'greetings and basics':   { name: 'Das Eingangsportal', icon: '🚪',  color: 'var(--c-portal)',  en: 'Basics' },
+};
+
+/* ═══════════════════════════════════════════════════════
+   XP / LEVEL SYSTEM
+═══════════════════════════════════════════════════════ */
+const LEVELS = [
+  { min:0,    name:'Lehrling',     title:'Stufe 1' },
+  { min:100,  name:'Geselle',      title:'Stufe 2' },
+  { min:300,  name:'Forscher',     title:'Stufe 3' },
+  { min:600,  name:'Gelehrter',    title:'Stufe 4' },
+  { min:1000, name:'Kenner',       title:'Stufe 5' },
+  { min:1600, name:'Meister',      title:'Stufe 6' },
+  { min:2500, name:'Großmeister',  title:'Stufe 7' },
+  { min:4000, name:'Weiser',       title:'Stufe 8' },
+  { min:6000, name:'Wortgott',     title:'Stufe 9' },
+];
+function getLevel(xp) {
+  let lvl = LEVELS[0];
+  for (const l of LEVELS) { if (xp >= l.min) lvl = l; else break; }
+  const idx = LEVELS.indexOf(lvl);
+  const next = LEVELS[idx + 1];
+  const pct = next ? ((xp - lvl.min) / (next.min - lvl.min) * 100) : 100;
+  return { ...lvl, idx, next, pct, xp };
+}
+
+/* ═══════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════ */
+let vocab = [];
+let byCategory = {};   // category → [entries]  (built once at load)
+let progress = {};   // id → { box, next, correct, wrong, fav }
+let xp = 0;
+let settings = { mode: 'flashcard', dir: 'en-de', filter: 'all', wing: null };
+let session = { queue: [], idx: 0, correct: 0, total: 0, streak: 0, maxStreak: 0, xpGained: 0 };
+let revealed = false;
+
+/* ═══════════════════════════════════════════════════════
+   STORAGE
+═══════════════════════════════════════════════════════ */
+const LS = {
+  save: () => { try { localStorage.setItem('wr_prog', JSON.stringify(progress)); localStorage.setItem('wr_xp', xp); localStorage.setItem('wr_cfg', JSON.stringify(settings)); } catch(e){} },
+  load: () => { try { progress = JSON.parse(localStorage.getItem('wr_prog') || '{}'); xp = parseInt(localStorage.getItem('wr_xp') || '0'); settings = { ...settings, ...JSON.parse(localStorage.getItem('wr_cfg') || '{}') }; } catch(e){} },
+  streak: () => { try { const s = JSON.parse(localStorage.getItem('wr_streak') || '{"n":0,"d":""}'); const td = today(); if (s.d === td || s.d === yesterday()) return s.n; return 0; } catch(e){ return 0; } },
+  saveStreak: (n) => { try { localStorage.setItem('wr_streak', JSON.stringify({ n, d: today() })); } catch(e){} },
+};
+
+// Increment the streak at most once per calendar day.
+function bumpStreak() {
+  let s;
+  try { s = JSON.parse(localStorage.getItem('wr_streak') || '{"n":0,"d":""}'); }
+  catch(e) { s = { n: 0, d: '' }; }
+  const td = today();
+  if (s.d === td) {
+    // Already counted today — leave the number, just ensure it's at least 1
+    if (!s.n) s.n = 1;
+  } else if (s.d === yesterday()) {
+    s.n = (s.n || 0) + 1;   // consecutive day
+  } else {
+    s.n = 1;                // streak broken or first ever
+  }
+  s.d = td;
+  try { localStorage.setItem('wr_streak', JSON.stringify(s)); } catch(e) {}
+  return s.n;
+}
+
+function today() { return new Date().toISOString().split('T')[0]; }
+function yesterday() { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().split('T')[0]; }
+function addDays(n) { const d = new Date(); d.setDate(d.getDate()+n); return d.toISOString().split('T')[0]; }
+
+/* ═══════════════════════════════════════════════════════
+   PROGRESS HELPERS
+═══════════════════════════════════════════════════════ */
+const INTERVALS = [0, 0, 1, 3, 7, 14]; // days per box
+
+function P(id) {
+  if (!progress[id]) progress[id] = { box: 0, next: today(), correct: 0, wrong: 0, fav: false };
+  return progress[id];
+}
+const isDue = id => P(id).next <= today();
+const isNew = id => !progress[id] || progress[id].box === 0;
+const isWeak = id => { const p = P(id); return p.wrong > p.correct && p.wrong > 1; };
+const isMastered = id => P(id).box >= 5;
+const isFav = id => P(id).fav;
+
+function applyRating(id, r) {
+  const p = P(id);
+  if (r === 1) { p.box = 0; p.wrong++; p.next = today(); }
+  else if (r === 2) { p.correct++; p.next = addDays(1); }
+  else if (r === 3) { p.box = Math.min(5, p.box + 1); p.correct++; p.next = addDays(INTERVALS[p.box]); }
+  else { p.box = Math.min(5, p.box + 2); p.correct++; p.next = addDays(INTERVALS[Math.min(5, p.box)]); }
+  LS.save();
+}
+
+/* ═══════════════════════════════════════════════════════
+   QUEUE BUILDING
+═══════════════════════════════════════════════════════ */
+function shuffle(a) { const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+
+function buildQueue(wingCat, filter) {
+  let pool = wingCat === '__all__' ? vocab : (byCategory[wingCat] || []);
+  if (filter === 'due')  pool = pool.filter(e => (isDue(e.id) || isNew(e.id)) && !isMastered(e.id));
+  if (filter === 'new')  pool = pool.filter(e => isNew(e.id));
+  if (filter === 'weak') pool = pool.filter(e => isWeak(e.id));
+  if (filter === 'fav')  pool = pool.filter(e => isFav(e.id));
+  const due  = shuffle(pool.filter(e => isDue(e.id) && !isNew(e.id)));
+  const newW = shuffle(pool.filter(e => isNew(e.id)));
+  const rest = shuffle(pool.filter(e => !isDue(e.id) && !isNew(e.id)));
+  return [...newW.slice(0,4), ...due, ...rest].slice(0, 20);
+}
+
+function countQueue(wingCat, filter) { return buildQueue(wingCat, filter).length; }
+
+/* ═══════════════════════════════════════════════════════
+   SCREEN NAVIGATION
+═══════════════════════════════════════════════════════ */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════════════
+   HOME — render library
+═══════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   INDEXES & STATS — computed in a single pass, not re-scanned
+═══════════════════════════════════════════════════════ */
+
+// Build category → entries index once, after vocab loads.
+function buildIndexes() {
+  byCategory = {};
+  for (const e of vocab) {
+    (byCategory[e.category] || (byCategory[e.category] = [])).push(e);
+  }
+}
+
+// One pass over the whole vocabulary, tallying everything the home
+// screen needs: global totals + per-category {total, mastered, due}.
+function computeStats() {
+  const td = today();
+  const cat = {};            // category → { total, mastered, due }
+  let totalMastered = 0;
+
+  for (const e of vocab) {
+    const c = cat[e.category] || (cat[e.category] = { total: 0, mastered: 0, due: 0 });
+    c.total++;
+    const p = progress[e.id];
+    const box = p ? p.box : 0;
+    const isNw = !p || box === 0;
+    const mastered = box >= 5;
+    const due = (!p) || p.next <= td;        // new or scheduled-due
+    if (mastered) { c.mastered++; totalMastered++; }
+    if ((due || isNw) && !mastered) c.due++;
+  }
+  return { cat, totalMastered, total: vocab.length };
+}
+
+function renderHome() {
+  const stats = computeStats();
+
+  const lvl = getLevel(xp);
+  document.getElementById('xp-level').textContent = `${lvl.name} · ${lvl.title}`;
+  const nextXP = lvl.next ? lvl.next.min : lvl.min + 100;
+  document.getElementById('xp-points').textContent = `${xp} / ${nextXP} XP`;
+  document.getElementById('xp-bar').style.width = lvl.pct + '%';
+
+  const streak = LS.streak();
+  document.getElementById('s-words').textContent = stats.total.toLocaleString();
+  document.getElementById('s-streak').textContent = streak + (streak === 1 ? ' Tag' : ' Tage');
+  document.getElementById('s-mastered').textContent = stats.totalMastered;
+
+  renderDailyQuest(stats);
+  renderWingGrid(stats);
+}
+
+function renderDailyQuest(stats) {
+  const wingKeys = Object.keys(WINGS);
+  const idx = new Date().getDate() % wingKeys.length;
+  const cat = wingKeys[idx];
+  const w = WINGS[cat];
+  const c = stats.cat[cat] || { due: 0 };
+  document.getElementById('quest-title').textContent = `Erkunde: ${w.name}`;
+  document.getElementById('quest-meta').textContent = `${c.due} Wörter warten auf dich`;
+  document.getElementById('daily-quest-btn').onclick = () => openWing(cat);
+}
+
+function renderWingGrid(stats) {
+  const grid = document.getElementById('wing-grid');
+  grid.innerHTML = '';
+  Object.entries(WINGS).forEach(([cat, w], i) => {
+    const c = stats.cat[cat] || { total: 0, mastered: 0, due: 0 };
+    const pct = c.total > 0 ? c.mastered / c.total * 100 : 0;
+    const awakened = c.mastered > 0;
+    const fullMastered = c.total > 0 && pct >= 100;
+
+    const card = document.createElement('div');
+    card.className = 'wing-card' + (awakened ? ' awakened' : '') + (fullMastered ? ' mastered' : '');
+    card.style.animationDelay = (i * 0.04) + 's';
+    card.style.background = awakened
+      ? `linear-gradient(145deg, var(--night2) 0%, color-mix(in srgb, ${w.color} 14%, var(--night2)) 100%)`
+      : 'var(--night2)';
+
+    const shortName = w.name.replace(/^(Die|Das|Der)\s+/, '');
+    card.innerHTML =
+      (c.due > 0 ? `<span class="wing-badge">${c.due}</span>` : '') +
+      `<span class="wing-icon">${w.icon}</span>
+       <div class="wing-name">${shortName}</div>
+       <div class="wing-progress-bar">
+         <div class="wing-progress-fill" style="width:${pct}%; background:${w.color}"></div>
+       </div>`;
+    card.addEventListener('click', () => openWing(cat));
+    grid.appendChild(card);
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   WING DETAIL
+═══════════════════════════════════════════════════════ */
+function openWing(cat) {
+  settings.wing = cat;
+  const w = WINGS[cat];
+  // Single pass over just this wing's entries
+  const entries = byCategory[cat] || [];
+  const total = entries.length;
+  let mastered = 0, due = 0;
+  const td = today();
+  for (const e of entries) {
+    const p = progress[e.id];
+    if (p && p.box >= 5) mastered++;
+    if (!p || p.next <= td) due++;
+  }
+  const awakened = mastered > 0;
+
+  const hero = document.getElementById('wing-hero');
+  hero.className = 'wing-hero' + (awakened ? ' awakened' : '');
+  const heroBg = document.getElementById('wing-hero-bg');
+  heroBg.style.background = `radial-gradient(ellipse at 50% 0%, ${w.color} 0%, transparent 70%)`;
+
+  document.getElementById('wh-icon').textContent = w.icon;
+  document.getElementById('wh-title').textContent = w.name;
+  document.getElementById('wh-title').style.color = w.color;
+  document.getElementById('wh-subtitle').textContent = w.en + ' · ' + total + ' Wörter';
+  document.getElementById('wh-total').textContent = total;
+  document.getElementById('wh-total').style.color = w.color;
+  document.getElementById('wh-mastered').textContent = mastered;
+  document.getElementById('wh-mastered').style.color = w.color;
+  document.getElementById('wh-due').textContent = due;
+  document.getElementById('wh-due').style.color = w.color;
+
+  // Restore settings UI
+  restoreDetailUI();
+  updateLaunchCount();
+  show('wing-detail');
+}
+
+function restoreDetailUI() {
+  document.querySelectorAll('.mode-pill').forEach(p => p.classList.toggle('active', p.dataset.mode === settings.mode));
+  document.querySelectorAll('.dir-pill').forEach(p => p.classList.toggle('active', p.dataset.dir === settings.dir));
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p.dataset.filter === settings.filter));
+}
+
+function updateLaunchCount() {
+  const n = countQueue(settings.wing, settings.filter);
+  document.getElementById('launch-count').textContent = n + ' Karten';
+}
+
+/* ═══════════════════════════════════════════════════════
+   STUDY SESSION
+═══════════════════════════════════════════════════════ */
+function startSession() {
+  const queue = buildQueue(settings.wing, settings.filter);
+  if (!queue.length) { alert('Keine Karten für diesen Filter gefunden!'); return; }
+  session = { queue, idx: 0, correct: 0, total: queue.length, streak: 0, maxStreak: 0, xpGained: 0 };
+  revealed = false;
+  show('study');
+  renderStudyCard();
+}
+
+function renderStudyCard() {
+  const e = currentEntry();
+  if (!e) return;
+  const w = WINGS[e.category] || { name: e.category, icon: '📖', color: 'var(--gold)' };
+  const isEnDe = settings.dir === 'en-de';
+  revealed = false;
+
+  // Update progress bar
+  const pct = session.idx / session.queue.length * 100;
+  document.getElementById('study-progress').style.width = pct + '%';
+  document.getElementById('study-progress').style.background = w.color;
+  document.getElementById('study-counter').textContent = `${session.idx + 1} / ${session.queue.length}`;
+  document.getElementById('streak-num').textContent = session.streak;
+
+  if (settings.mode === 'flashcard') {
+    document.getElementById('fc-view').style.display = '';
+    document.getElementById('mc-view').style.display = 'none';
+    document.getElementById('rating-area').style.display = 'none';
+    renderFlashcard(e, w, isEnDe);
+  } else {
+    document.getElementById('fc-view').style.display = 'none';
+    document.getElementById('mc-view').style.display = '';
+    renderMC(e, w, isEnDe);
+  }
+}
+
+function currentEntry() { return session.queue[session.idx]; }
+
+function renderFlashcard(e, w, isEnDe) {
+  document.getElementById('card-stripe').style.background = w.color;
+  document.getElementById('card-realm-bg').textContent = w.icon;
+  document.getElementById('card-wing-pill').textContent = w.name;
+  document.getElementById('card-wing-pill').style.background = w.color + '22';
+  document.getElementById('card-wing-pill').style.color = w.color;
+
+  document.getElementById('card-prompt').textContent = isEnDe ? 'Englisch' : 'Deutsch';
+  if (isEnDe) {
+    document.getElementById('card-article').textContent = '';
+    document.getElementById('card-word').textContent = e.en;
+    document.getElementById('card-answer-word').textContent = (e.article ? e.article + ' ' : '') + e.de;
+  } else {
+    document.getElementById('card-article').textContent = e.article || '';
+    document.getElementById('card-article').style.color = w.color;
+    document.getElementById('card-word').textContent = e.de;
+    document.getElementById('card-answer-word').textContent = e.en;
+  }
+  document.getElementById('card-answer').classList.remove('revealed');
+  document.getElementById('tap-hint').style.display = '';
+  document.getElementById('example-slot').innerHTML = '';
+
+  const favBtn = document.getElementById('card-fav');
+  favBtn.textContent = P(e.id).fav ? '★' : '☆';
+  favBtn.classList.toggle('active', P(e.id).fav);
+  favBtn.style.color = P(e.id).fav ? w.color : '';
+}
+
+function revealFlashcard() {
+  if (revealed) return;
+  revealed = true;
+  const e = currentEntry();
+  document.getElementById('card-answer').classList.add('revealed');
+  document.getElementById('tap-hint').style.display = 'none';
+  document.getElementById('rating-area').style.display = 'grid';
+  loadExample(e);
+}
+
+function loadExample(e) {
+  const slot = document.getElementById('example-slot');
+  if (e.example_de && e.example_en) {
+    slot.innerHTML = `<div class="card-example"><strong>${e.example_de}</strong><br>${e.example_en}</div>`;
+  } else {
+    slot.innerHTML = `<div class="generating-row">✨ Beispiel wird generiert<div class="dots"><span></span><span></span><span></span></div></div>`;
+    generateExample(e).then(ex => {
+      // Ignore if the user has moved to a different card
+      if (currentEntry()?.id !== e.id) return;
+      if (ex) {
+        slot.innerHTML = `<div class="card-example"><strong>${ex.de}</strong><br>${ex.en}</div>`;
+      } else {
+        slot.innerHTML = `<div class="card-example" style="opacity:.5">Kein Beispiel verfügbar (offline?)</div>`;
+      }
+    }).catch(() => {
+      if (currentEntry()?.id === e.id) slot.innerHTML = '';
+    });
+  }
+}
+
+function renderMC(e, w, isEnDe) {
+  document.getElementById('mc-stripe').style.background = w.color;
+  document.getElementById('mc-realm-bg').textContent = w.icon;
+  document.getElementById('mc-wing-pill').textContent = w.name;
+  document.getElementById('mc-wing-pill').style.background = w.color + '22';
+  document.getElementById('mc-wing-pill').style.color = w.color;
+  document.getElementById('mc-prompt').textContent = isEnDe ? 'Englisch' : 'Deutsch';
+  if (isEnDe) {
+    document.getElementById('mc-article').textContent = '';
+    document.getElementById('mc-word').textContent = e.en;
+  } else {
+    document.getElementById('mc-article').textContent = e.article || '';
+    document.getElementById('mc-article').style.color = w.color;
+    document.getElementById('mc-word').textContent = e.de;
+  }
+  const mcFav = document.getElementById('mc-fav');
+  mcFav.textContent = P(e.id).fav ? '★' : '☆';
+  mcFav.classList.toggle('active', P(e.id).fav);
+  mcFav.style.color = P(e.id).fav ? w.color : '';
+
+  // Build options
+  const correct = isEnDe ? ((e.article ? e.article + ' ' : '') + e.de) : e.en;
+  // Pull distractors from the same wing via the prebuilt index; fall back to
+  // the whole vocabulary only when a wing is too small.
+  const sameWing = (byCategory[e.category] || []).filter(v => v.id !== e.id);
+  const source = sameWing.length >= 3 ? sameWing : vocab;
+  const distractors = shuffle(source)
+    .filter(v => v.id !== e.id)
+    .slice(0, 3)
+    .map(v => isEnDe ? ((v.article ? v.article + ' ' : '') + v.de) : v.en);
+  const options = shuffle([correct, ...distractors]);
+  const keys = ['A','B','C','D'];
+
+  const container = document.getElementById('mc-choices');
+  container.innerHTML = options.map((opt, i) => `
+    <button class="mc-choice" data-correct="${opt === correct}">
+      <span class="mc-key">${keys[i]}</span>
+      <span class="mc-text">${opt}</span>
+    </button>`).join('');
+
+  container.querySelectorAll('.mc-choice').forEach(btn => {
+    btn.addEventListener('click', handleMCPick, { once: true });
+  });
+}
+
+function handleMCPick(evt) {
+  const btn = evt.currentTarget;
+  const correct = btn.dataset.correct === 'true';
+  document.getElementById('mc-choices').querySelectorAll('.mc-choice').forEach(b => {
+    b.removeEventListener('click', handleMCPick);
+    if (b.dataset.correct === 'true') b.classList.add('correct');
+    else if (b === btn && !correct) b.classList.add('wrong');
+  });
+  if (correct) {
+    session.correct++; session.streak++; session.maxStreak = Math.max(session.maxStreak, session.streak);
+    session.xpGained += 10;
+    applyRating(currentEntry().id, 3);
+    animateStreak();
+    burst(btn);
+  } else {
+    session.streak = 0;
+    applyRating(currentEntry().id, 1);
+    btn.classList.add('shake');
+  }
+  document.getElementById('streak-num').textContent = session.streak;
+  setTimeout(nextCard, 900);
+}
+
+function handleRating(r) {
+  if (r >= 3) {
+    session.correct++; session.streak++; session.maxStreak = Math.max(session.maxStreak, session.streak);
+    session.xpGained += (r === 4 ? 15 : 10);
+    if (r === 4) burst(document.getElementById('v-card'));
+    animateStreak();
+  } else { session.streak = 0; }
+  document.getElementById('streak-num').textContent = session.streak;
+  applyRating(currentEntry().id, r);
+  nextCard();
+}
+
+function animateStreak() {
+  const el = document.getElementById('streak-display');
+  el.classList.remove('bump');
+  void el.offsetWidth;
+  el.classList.add('bump');
+}
+
+function nextCard() {
+  session.idx++;
+  if (session.idx >= session.queue.length) { endSession(); return; }
+  // Slide out/in
+  const card = document.getElementById(settings.mode === 'flashcard' ? 'v-card' : 'mc-card');
+  card.style.transition = 'transform .16s ease-in, opacity .16s ease-in';
+  card.style.transform = 'translateX(-20px) scale(.97)';
+  card.style.opacity = '0';
+  setTimeout(() => {
+    card.style.transition = '';
+    card.style.transform = 'translateX(16px)';
+    card.style.opacity = '0';
+    renderStudyCard();
+    requestAnimationFrame(() => {
+      card.style.transition = 'transform .24s var(--spring), opacity .2s var(--ease-out)';
+      card.style.transform = '';
+      card.style.opacity = '1';
+    });
+  }, 160);
+}
+
+/* ═══════════════════════════════════════════════════════
+   SESSION END
+═══════════════════════════════════════════════════════ */
+function endSession() {
+  // Award XP
+  xp += session.xpGained;
+  LS.save();
+  // Update streak — increment once per calendar day of study
+  bumpStreak();
+
+  const pct = session.total > 0 ? Math.round(session.correct / session.total * 100) : 0;
+  const trophies = ['😤','🙂','😊','😎','🏆'];
+  const t = trophies[Math.min(4, Math.floor(pct / 20))];
+  const titles = ['Weiter üben!','Nicht schlecht!','Gut gemacht!','Sehr gut!','Ausgezeichnet!'];
+  document.getElementById('r-trophy').textContent = t;
+  document.getElementById('r-title').textContent = titles[Math.min(4, Math.floor(pct / 20))];
+  document.getElementById('r-sub').textContent = `${pct}% korrekt · ${session.xpGained} XP verdient`;
+  document.getElementById('r-xp').textContent = `+${session.xpGained} XP`;
+  document.getElementById('r-cards').textContent = session.total;
+  document.getElementById('r-correct').textContent = session.correct;
+  document.getElementById('r-streak').textContent = session.maxStreak;
+  show('results');
+
+  // Auto-sync in background after session
+  Sync.silentPush();
+}
+
+/* ═══════════════════════════════════════════════════════
+   EXAMPLE GENERATION
+═══════════════════════════════════════════════════════ */
+const exCache = {};
+async function generateExample(e) {
+  if (exCache[e.id]) return exCache[e.id];
+  const prompt = `Create one short B1-level German example sentence using "${e.article ? e.article + ' ' : ''}${e.de}" (= "${e.en}"). Reply ONLY with JSON: {"de":"German sentence.","en":"English translation."}`;
+  try {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ model:'claude-haiku-4-5-20251001', max_tokens:120, messages:[{role:'user',content:prompt}] })
+    });
+    const d = await r.json();
+    const text = d.content?.[0]?.text?.trim().replace(/```json|```/g,'').trim();
+    const parsed = JSON.parse(text);
+    if (parsed.de && parsed.en) {
+      exCache[e.id] = parsed;
+      e.example_de = parsed.de;
+      e.example_en = parsed.en;
+      return parsed;
+    }
+  } catch(err) {}
+  return null;
+}
+
+/* ═══════════════════════════════════════════════════════
+   CONFETTI BURST
+═══════════════════════════════════════════════════════ */
+function burst(target) {
+  const rect = target.getBoundingClientRect();
+  const cx = rect.left + rect.width / 2, cy = rect.top + rect.height / 3;
+  const cols = ['#F0C040','#2EC4B6','#E84855','#FF9F1C','#A78BFA','#06D6A0','#4BC8E8'];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti-dot';
+    const tx = (Math.random() - .5) * 140, ty = (Math.random() - 1.4) * 100;
+    const rot = Math.random() * 540;
+    el.style.cssText = `left:${cx}px;top:${cy}px;background:${cols[i%cols.length]};border-radius:${Math.random()>.5?'50%':'3px'};--tx:${tx}px;--ty:${ty}px;--rot:${rot}deg;animation-duration:${.5+Math.random()*.5}s`;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   EVENT LISTENERS
+═══════════════════════════════════════════════════════ */
+function bindEvents() {
+  // Wing detail: mode/dir/filter
+  document.querySelectorAll('.mode-pill').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.mode-pill').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); settings.mode = b.dataset.mode; updateLaunchCount();
+  }));
+  document.querySelectorAll('.dir-pill').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.dir-pill').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); settings.dir = b.dataset.dir; updateLaunchCount();
+  }));
+  document.querySelectorAll('.filter-pill').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.filter-pill').forEach(x => x.classList.remove('active'));
+    b.classList.add('active'); settings.filter = b.dataset.filter; updateLaunchCount();
+  }));
+
+  document.getElementById('back-to-library').addEventListener('click', () => { show('home'); renderHome(); });
+  document.getElementById('launch-btn').addEventListener('click', startSession);
+
+  // Flashcard tap to reveal
+  document.getElementById('v-card').addEventListener('click', (e) => {
+    if (e.target.closest('.card-fav')) return;
+    revealFlashcard();
+  });
+
+  // Ratings
+  document.getElementById('rating-area').querySelectorAll('.rating-btn').forEach(b => {
+    b.addEventListener('click', () => handleRating(parseInt(b.dataset.r)));
+  });
+
+  // Favourites
+  document.getElementById('card-fav').addEventListener('click', () => toggleFav(currentEntry()?.id, 'card-fav'));
+  document.getElementById('mc-fav').addEventListener('click', () => toggleFav(currentEntry()?.id, 'mc-fav'));
+
+  // Study back
+  document.getElementById('study-back').addEventListener('click', () => { show('wing-detail'); });
+
+  // Results
+  document.getElementById('r-again').addEventListener('click', startSession);
+  document.getElementById('r-home').addEventListener('click', () => { show('home'); renderHome(); });
+}
+
+function toggleFav(id, btnId) {
+  if (!id) return;
+  const p = P(id); p.fav = !p.fav; LS.save();
+  const btn = document.getElementById(btnId);
+  btn.textContent = p.fav ? '★' : '☆';
+  btn.classList.toggle('active', p.fav);
+  const w = WINGS[currentEntry()?.category];
+  btn.style.color = p.fav && w ? w.color : '';
+}
+
+/* ═══════════════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════════════ */
+async function init() {
+  LS.load();
+  try {
+    const res = await fetch('./vocab.json');
+    vocab = await res.json();
+  } catch(e) {
+    document.body.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;color:#aaa;background:#0F0A1A;min-height:100vh">Konnte vocab.json nicht laden. Bitte prüfe ob die Datei im gleichen Ordner liegt.</div>';
+    return;
+  }
+  buildIndexes();
+  bindEvents();
+  bindSyncEvents();
+
+  // Show last sync time on button if connected
+  if (Sync.isConfigured()) {
+    const last = Sync.lastSync();
+    updateSyncBtnState('', last || 'Sync');
+    // Pull from Gist in background on startup
+    Sync.pull().then(() => {
+      const t = Sync.saveLastSync();
+      updateSyncBtnState('ok', t);
+      renderHome();
+    }).catch(() => updateSyncBtnState('err', 'Offline'));
+  }
+
+  renderHome();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   GIST SYNC — GitHub progress persistence
+═══════════════════════════════════════════════════════ */
+const GIST_FILENAME = 'wortreich_progress.json';
+const GIST_DESCRIPTION = 'Das Wortreich — Lernfortschritt';
+
+const Sync = {
+  token:  () => { try { return localStorage.getItem('wr_gh_token') || ''; } catch(e){ return ''; } },
+  gistId: () => { try { return localStorage.getItem('wr_gh_gist') || ''; } catch(e){ return ''; } },
+  lastSync: () => { try { return localStorage.getItem('wr_last_sync') || ''; } catch(e){ return ''; } },
+
+  saveToken: (t) => { try { localStorage.setItem('wr_gh_token', t); } catch(e){} },
+  saveGistId: (id) => { try { localStorage.setItem('wr_gh_gist', id); } catch(e){} },
+  saveLastSync: () => {
+    const now = new Date().toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
+    try { localStorage.setItem('wr_last_sync', now); } catch(e){}
+    return now;
+  },
+
+  isConfigured: () => !!Sync.token(),
+
+  headers: () => ({
+    'Authorization': `Bearer ${Sync.token()}`,
+    'Accept': 'application/vnd.github+json',
+    'Content-Type': 'application/json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  }),
+
+  // Find existing wortreich gist or return null
+  async findGist() {
+    const res = await fetch('https://api.github.com/gists?per_page=100', { headers: Sync.headers() });
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+    const gists = await res.json();
+    const found = gists.find(g => g.files && g.files[GIST_FILENAME]);
+    return found ? found.id : null;
+  },
+
+  // Create a new private gist with current progress
+  async createGist() {
+    const payload = buildSyncPayload();
+    const res = await fetch('https://api.github.com/gists', {
+      method: 'POST',
+      headers: Sync.headers(),
+      body: JSON.stringify({
+        description: GIST_DESCRIPTION,
+        public: false,
+        files: { [GIST_FILENAME]: { content: JSON.stringify(payload, null, 2) } }
+      })
+    });
+    if (!res.ok) throw new Error(`Gist create ${res.status}`);
+    const data = await res.json();
+    return data.id;
+  },
+
+  // Update existing gist with current progress
+  async updateGist(gistId) {
+    const payload = buildSyncPayload();
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, {
+      method: 'PATCH',
+      headers: Sync.headers(),
+      body: JSON.stringify({
+        files: { [GIST_FILENAME]: { content: JSON.stringify(payload, null, 2) } }
+      })
+    });
+    if (!res.ok) throw new Error(`Gist update ${res.status}`);
+  },
+
+  // Read progress from gist
+  async readGist(gistId) {
+    const res = await fetch(`https://api.github.com/gists/${gistId}`, { headers: Sync.headers() });
+    if (!res.ok) throw new Error(`Gist read ${res.status}`);
+    const data = await res.json();
+    const raw = data.files?.[GIST_FILENAME]?.content;
+    if (!raw) throw new Error('No progress file in gist');
+    return JSON.parse(raw);
+  },
+
+  // Full push: ensure gist exists, then update it
+  async push() {
+    let gistId = Sync.gistId();
+    if (!gistId) {
+      // Try to find existing one first
+      gistId = await Sync.findGist();
+      if (gistId) Sync.saveGistId(gistId);
+    }
+    if (gistId) {
+      await Sync.updateGist(gistId);
+    } else {
+      gistId = await Sync.createGist();
+      Sync.saveGistId(gistId);
+    }
+    return gistId;
+  },
+
+  // Full pull: read gist, merge with local (remote wins on conflicts)
+  async pull() {
+    const gistId = Sync.gistId() || await Sync.findGist();
+    if (!gistId) return false; // no remote data yet
+    Sync.saveGistId(gistId);
+    const remote = await Sync.readGist(gistId);
+    mergeRemoteProgress(remote);
+    return true;
+  },
+
+  // Connect flow: validate token, find/create gist, push current progress
+  async connect(token) {
+    Sync.saveToken(token);
+    // Validate by fetching user
+    const res = await fetch('https://api.github.com/user', { headers: Sync.headers() });
+    if (!res.ok) { Sync.saveToken(''); throw new Error('Ungültiger Token — bitte prüfen'); }
+    // Try to pull existing progress first, then push
+    try { await Sync.pull(); } catch(e) {}
+    await Sync.push();
+    return Sync.saveLastSync();
+  },
+
+  // Silent sync after a session (push only, no UI noise on error)
+  async silentPush() {
+    if (!Sync.isConfigured()) return;
+    try {
+      await Sync.push();
+      const t = Sync.saveLastSync();
+      updateSyncBtnState('ok', t);
+    } catch(e) {
+      updateSyncBtnState('err', 'Fehler');
+    }
+  },
+
+  disconnect() {
+    try { localStorage.removeItem('wr_gh_token'); localStorage.removeItem('wr_gh_gist'); localStorage.removeItem('wr_last_sync'); } catch(e){}
+  },
+};
+
+// Build the payload object that goes into the gist
+function buildSyncPayload() {
+  return {
+    version: 1,
+    exported: new Date().toISOString(),
+    xp,
+    progress,
+    streak: JSON.parse(localStorage.getItem('wr_streak') || '{"n":0,"d":""}'),
+  };
+}
+
+// Merge remote payload into local state (remote wins per-word if box is higher)
+function mergeRemoteProgress(remote) {
+  if (remote.progress) {
+    for (const [id, rp] of Object.entries(remote.progress)) {
+      const lp = progress[id];
+      if (!lp || rp.box > lp.box || (rp.box === lp.box && rp.correct > lp.correct)) {
+        progress[id] = rp;
+      }
+    }
+  }
+  // Take whichever XP is higher
+  if (typeof remote.xp === 'number' && remote.xp > xp) xp = remote.xp;
+  // Streak: take higher
+  if (remote.streak) {
+    try {
+      const cur = JSON.parse(localStorage.getItem('wr_streak') || '{"n":0}');
+      if ((remote.streak.n || 0) > (cur.n || 0)) {
+        localStorage.setItem('wr_streak', JSON.stringify(remote.streak));
+      }
+    } catch(e){}
+  }
+  LS.save();
+}
+
+/* ── Sync button state ──────────────────────────── */
+function updateSyncBtnState(state, label) {
+  const btn = document.getElementById('sync-btn');
+  const lbl = document.getElementById('sync-label');
+  btn.className = 'sync-btn' + (state ? ' ' + state : '');
+  if (label) lbl.textContent = label;
+}
+
+/* ── Sync modal ─────────────────────────────────── */
+function openSyncModal() {
+  const modal = document.getElementById('sync-modal');
+  modal.classList.remove('hidden');
+  const hasToken = Sync.isConfigured();
+  document.getElementById('token-input').value = hasToken ? '••••••••••••••••••••' : '';
+  document.getElementById('disconnect-btn').style.display = hasToken ? '' : 'none';
+  document.getElementById('modal-status').textContent = hasToken
+    ? `✓ Verbunden · Letzter Sync: ${Sync.lastSync() || 'noch nie'}`
+    : '';
+  document.getElementById('modal-status').className = 'modal-status' + (hasToken ? ' ok' : '');
+  if (hasToken) document.getElementById('token-input').placeholder = 'Token bereits gespeichert';
+}
+
+function closeSyncModal() {
+  document.getElementById('sync-modal').classList.add('hidden');
+  document.getElementById('modal-status').textContent = '';
+}
+
+/* ── Sync event bindings ────────────────────────── */
+function bindSyncEvents() {
+  document.getElementById('sync-btn').addEventListener('click', () => {
+    if (Sync.isConfigured()) {
+      // Already connected — do a manual sync
+      manualSync();
+    } else {
+      openSyncModal();
+    }
+  });
+
+  document.getElementById('cancel-sync-btn').addEventListener('click', closeSyncModal);
+  document.getElementById('sync-modal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('sync-modal')) closeSyncModal();
+  });
+
+  // Show/hide token
+  document.getElementById('token-toggle').addEventListener('click', () => {
+    const inp = document.getElementById('token-input');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  });
+
+  // Connect
+  document.getElementById('connect-btn').addEventListener('click', async () => {
+    const inp = document.getElementById('token-input');
+    const raw = inp.value.trim();
+    if (!raw || raw.startsWith('•')) {
+      // Already connected — just do a sync
+      if (Sync.isConfigured()) { closeSyncModal(); manualSync(); return; }
+      setModalStatus('Bitte Token eingeben', 'err'); return;
+    }
+    document.getElementById('connect-btn').disabled = true;
+    setModalStatus('Verbinde...', '');
+    try {
+      const time = await Sync.connect(raw);
+      setModalStatus(`✓ Synchronisiert um ${time}`, 'ok');
+      setTimeout(closeSyncModal, 1200);
+      updateSyncBtnState('ok', time);
+      renderHome();
+    } catch(e) {
+      setModalStatus(e.message || 'Verbindung fehlgeschlagen', 'err');
+    } finally {
+      document.getElementById('connect-btn').disabled = false;
+    }
+  });
+
+  // Disconnect
+  document.getElementById('disconnect-btn').addEventListener('click', () => {
+    if (confirm('Token wirklich entfernen? Du kannst ihn jederzeit neu eingeben.')) {
+      Sync.disconnect();
+      closeSyncModal();
+      updateSyncBtnState('', 'Sync');
+    }
+  });
+}
+
+function setModalStatus(msg, cls) {
+  const el = document.getElementById('modal-status');
+  el.textContent = msg;
+  el.className = 'modal-status' + (cls ? ' ' + cls : '');
+}
+
+async function manualSync() {
+  if (!Sync.isConfigured()) { openSyncModal(); return; }
+  updateSyncBtnState('syncing', '...');
+  try {
+    // Pull first, then push
+    await Sync.pull();
+    renderHome();
+    await Sync.push();
+    const t = Sync.saveLastSync();
+    updateSyncBtnState('ok', t);
+  } catch(e) {
+    updateSyncBtnState('err', 'Fehler');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>
