@@ -1,7 +1,7 @@
 // Cache version — update this string whenever you deploy new files.
 // The timestamp below is set at build time; changing it forces all
 // devices to discard the old cache and fetch fresh files.
-const CACHE = 'wortschatz-202506081201';
+const CACHE = 'wortschatz-202606081201';
 
 // Static shell: cache-first (fast, changes rarely)
 const SHELL = ['./index.html', './manifest.json'];
