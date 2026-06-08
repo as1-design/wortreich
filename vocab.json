@@ -418,7 +418,7 @@
   {
     "id": "0033",
     "en": "shared flat",
-    "de": "Wohngemeinschaft (WG)",
+    "de": "Wohngemeinschaft",
     "article": "die",
     "pos": "noun",
     "category": "family and relationships",
@@ -426,7 +426,7 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "abbr: WG"
   },
   {
     "id": "0034",
@@ -509,7 +509,7 @@
   {
     "id": "0040",
     "en": "sea",
-    "de": "Meer (Sg.)",
+    "de": "Meer",
     "article": "das",
     "pos": "noun",
     "category": "animals and nature",
@@ -517,7 +517,7 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0041",
@@ -548,7 +548,7 @@
   {
     "id": "0043",
     "en": "snow",
-    "de": "Schnee (Sg.)",
+    "de": "Schnee",
     "article": "der",
     "pos": "noun",
     "category": "animals and nature",
@@ -556,12 +556,12 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0044",
     "en": "rain",
-    "de": "Regen (Sg.)",
+    "de": "Regen",
     "article": "der",
     "pos": "noun",
     "category": "animals and nature",
@@ -569,12 +569,12 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0045",
     "en": "ice",
-    "de": "Eis (Sg.)",
+    "de": "Eis",
     "article": "das",
     "pos": "noun",
     "category": "animals and nature",
@@ -582,7 +582,7 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0046",
@@ -626,7 +626,7 @@
   {
     "id": "0049",
     "en": "abroad",
-    "de": "Ausland (Sg.)",
+    "de": "Ausland",
     "article": "das",
     "pos": "noun",
     "category": "places and travel",
@@ -634,7 +634,7 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0050",
@@ -1081,7 +1081,7 @@
   {
     "id": "0084",
     "en": "memory",
-    "de": "Gedächtnis (Sg.)",
+    "de": "Gedächtnis",
     "article": "das",
     "pos": "noun",
     "category": "concepts and ideas",
@@ -1089,7 +1089,7 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0085",
@@ -1185,7 +1185,7 @@
   {
     "id": "0092",
     "en": "patience",
-    "de": "Geduld (Sg.)",
+    "de": "Geduld",
     "article": "die",
     "pos": "noun",
     "category": "emotions and qualities",
@@ -1193,12 +1193,12 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0093",
     "en": "mood",
-    "de": "Laune (Sg.)",
+    "de": "Laune",
     "article": "die",
     "pos": "noun",
     "category": "emotions and qualities",
@@ -1206,7 +1206,7 @@
     "example_de": "",
     "example_en": "",
     "tags": [],
-    "notes": ""
+    "notes": "singular only"
   },
   {
     "id": "0094",
@@ -3017,7 +3017,7 @@
   {
     "id": "0232",
     "en": "art exhibition",
-    "de": "Kunstaustellung",
+    "de": "Kunstausstellung",
     "article": "die",
     "pos": "noun",
     "category": "culture, media and art",
@@ -3134,7 +3134,7 @@
   {
     "id": "0241",
     "en": "actor",
-    "de": "Schausspieler",
+    "de": "Schauspieler",
     "article": "der",
     "pos": "noun",
     "category": "home and objects",
@@ -3289,8 +3289,8 @@
   },
   {
     "id": "0253",
-    "en": "Kleider",
-    "de": "(Kleider)Haken",
+    "en": "hook",
+    "de": "Haken",
     "article": "der",
     "pos": "noun",
     "category": "home and objects",
@@ -3876,7 +3876,7 @@
     "id": "0298",
     "en": "seat",
     "de": "Sitzplatz",
-    "article": "das",
+    "article": "der",
     "pos": "noun",
     "category": "city and society",
     "difficulty": 3,
@@ -4420,10 +4420,10 @@
   },
   {
     "id": "0340",
-    "en": "mechatronics engineer (m./f.)",
-    "de": "automotive",
-    "article": null,
-    "pos": "other",
+    "en": "mechatronics engineer",
+    "de": "Mechatroniker",
+    "article": "der",
+    "pos": "noun",
     "category": "people and professions",
     "difficulty": 3,
     "example_de": "",
@@ -4812,7 +4812,7 @@
   },
   {
     "id": "0370",
-    "en": "to can",
+    "en": "to be able to, can",
     "de": "können",
     "article": null,
     "pos": "verb",
@@ -5033,7 +5033,7 @@
   },
   {
     "id": "0387",
-    "en": "people’s home",
+    "en": "retirement home, care home",
     "de": "Seniorenheim",
     "article": "das",
     "pos": "noun",
@@ -5813,7 +5813,7 @@
   },
   {
     "id": "0447",
-    "en": "ilometre/kilometer",
+    "en": "kilometre",
     "de": "Kilometer",
     "article": "der",
     "pos": "noun",
@@ -5842,7 +5842,7 @@
     "en": "to (+ place)",
     "de": "bis",
     "article": null,
-    "pos": "verb",
+    "pos": "other",
     "category": "culture, media and art",
     "difficulty": 3,
     "example_de": "",
@@ -6515,7 +6515,7 @@
   },
   {
     "id": "0501",
-    "en": "nclusive",
+    "en": "inclusive",
     "de": "inklusive",
     "article": null,
     "pos": "other",
@@ -6983,7 +6983,7 @@
   },
   {
     "id": "0537",
-    "en": "eople (pl.)",
+    "en": "people",
     "de": "Menschen",
     "article": null,
     "pos": "other",
@@ -7412,7 +7412,7 @@
   },
   {
     "id": "0570",
-    "en": "pecialists (pl.) (m./f.)",
+    "en": "specialists",
     "de": "Fachleute",
     "article": null,
     "pos": "other",
@@ -7947,7 +7947,7 @@
   },
   {
     "id": "0611",
-    "en": "lothes",
+    "en": "clothes",
     "de": "Klamotten",
     "article": null,
     "pos": "other",
@@ -8350,7 +8350,7 @@
   },
   {
     "id": "0642",
-    "en": "to collect football",
+    "en": "to collect football stickers",
     "de": "Fußballbilder sammeln",
     "article": null,
     "pos": "verb",
@@ -8701,8 +8701,8 @@
   },
   {
     "id": "0669",
-    "en": "to have fixed working haben hours",
-    "de": "feste Arbeitszeiten",
+    "en": "to have fixed working hours",
+    "de": "feste Arbeitszeiten haben",
     "article": null,
     "pos": "verb",
     "category": "education and work",
@@ -8714,8 +8714,8 @@
   },
   {
     "id": "0670",
-    "en": "to have flexible working haben hours",
-    "de": "flexible Arbeitszeiten",
+    "en": "to have flexible working hours",
+    "de": "flexible Arbeitszeiten haben",
     "article": null,
     "pos": "verb",
     "category": "education and work",
@@ -8935,7 +8935,7 @@
   },
   {
     "id": "0687",
-    "en": "achelor of Arts degree",
+    "en": "bachelor (degree)",
     "de": "Bachelor",
     "article": "der",
     "pos": "noun",
@@ -9572,7 +9572,7 @@
   },
   {
     "id": "0736",
-    "en": "taff",
+    "en": "staff, employee",
     "de": "Mitarbeiter",
     "article": "der",
     "pos": "noun",
@@ -10027,7 +10027,7 @@
   },
   {
     "id": "0771",
-    "en": ", eraser",
+    "en": "eraser",
     "de": "Radiergummi",
     "article": "der",
     "pos": "noun",
@@ -10222,7 +10222,7 @@
   },
   {
     "id": "0786",
-    "en": "raining",
+    "en": "training, further training",
     "de": "Fortbildung",
     "article": "die",
     "pos": "noun",
@@ -10274,7 +10274,7 @@
   },
   {
     "id": "0790",
-    "en": "urse (m./f.)",
+    "en": "nurse",
     "de": "Pflegefachkraft",
     "article": "die",
     "pos": "noun",
@@ -10313,7 +10313,7 @@
   },
   {
     "id": "0793",
-    "en": "rainer",
+    "en": "trainer, coach",
     "de": "Trainer",
     "article": "der",
     "pos": "noun",
@@ -10417,7 +10417,7 @@
   },
   {
     "id": "0801",
-    "en": ", highway",
+    "en": "highway",
     "de": "Autobahn",
     "article": "die",
     "pos": "noun",
@@ -10456,7 +10456,7 @@
   },
   {
     "id": "0804",
-    "en": ", truck",
+    "en": "truck",
     "de": "Lkw",
     "article": "der",
     "pos": "noun",
@@ -10534,7 +10534,7 @@
   },
   {
     "id": "0810",
-    "en": "ottle",
+    "en": "water bottle, drinking bottle",
     "de": "Trinkflasche",
     "article": "die",
     "pos": "noun",
@@ -11158,7 +11158,7 @@
   },
   {
     "id": "0858",
-    "en": "house",
+    "en": "backyard, rear courtyard",
     "de": "Hinterhof",
     "article": "der",
     "pos": "noun",
@@ -11626,7 +11626,7 @@
   },
   {
     "id": "0894",
-    "en": "1a",
+    "en": "teamwork",
     "de": "Teamarbeit",
     "article": null,
     "pos": "other",
@@ -11652,7 +11652,7 @@
   },
   {
     "id": "0896",
-    "en": "rustrated",
+    "en": "frustrated",
     "de": "frustriert",
     "article": null,
     "pos": "other",
@@ -12681,8 +12681,8 @@
   },
   {
     "id": "0975",
-    "en": "to have a cargo bike haben",
-    "de": "ein Lastenfahrrad",
+    "en": "to have a cargo bike",
+    "de": "ein Lastenfahrrad haben",
     "article": null,
     "pos": "verb",
     "category": "verbs",
@@ -12694,8 +12694,8 @@
   },
   {
     "id": "0976",
-    "en": "to buy second-hand kaufen clothes",
-    "de": "Secondhandkleidung",
+    "en": "to buy second-hand clothes",
+    "de": "Secondhandkleidung kaufen",
     "article": null,
     "pos": "verb",
     "category": "food and everyday life",
@@ -12707,8 +12707,8 @@
   },
   {
     "id": "0977",
-    "en": "to repair devices reparieren yourself",
-    "de": "Geräte selbst",
+    "en": "to repair devices yourself",
+    "de": "Geräte selbst reparieren",
     "article": null,
     "pos": "verb",
     "category": "verbs",
@@ -12746,8 +12746,8 @@
   },
   {
     "id": "0980",
-    "en": "to buy regional food kaufen",
-    "de": "regionale Lebensmittel",
+    "en": "to buy regional food",
+    "de": "regionale Lebensmittel kaufen",
     "article": null,
     "pos": "verb",
     "category": "food and everyday life",
@@ -12798,7 +12798,7 @@
   },
   {
     "id": "0984",
-    "en": "to develop (further), to (sich) progress",
+    "en": "to develop further, to progress",
     "de": "weiterentwickeln",
     "article": null,
     "pos": "verb",
@@ -12993,9 +12993,9 @@
   },
   {
     "id": "0999",
-    "en": "fruit and vegetable",
-    "de": "Gemüse- und",
-    "article": "der",
+    "en": "vegetables",
+    "de": "Gemüse",
+    "article": "das",
     "pos": "noun",
     "category": "food and everyday life",
     "difficulty": 3,
@@ -13006,7 +13006,7 @@
   },
   {
     "id": "1000",
-    "en": "cell phone",
+    "en": "mobile phone shop",
     "de": "Handyladen",
     "article": "der",
     "pos": "noun",
@@ -17323,7 +17323,7 @@
   {
     "id": "1332",
     "en": "clinic",
-    "de": "Klinikum, Kliniken",
+    "de": "Klinikum",
     "article": "das",
     "pos": "noun",
     "category": "concepts and ideas",
@@ -19169,7 +19169,7 @@
   {
     "id": "1474",
     "en": "satisfying",
-    "de": "befriedgend",
+    "de": "befriedigend",
     "article": null,
     "pos": "other",
     "category": "education and work",
@@ -19546,7 +19546,7 @@
   {
     "id": "1503",
     "en": "factor",
-    "de": "Faktor, Faktoren",
+    "de": "Faktor",
     "article": "der",
     "pos": "noun",
     "category": "education and work",
@@ -20559,10 +20559,10 @@
   },
   {
     "id": "1581",
-    "en": "warming",
+    "en": "to warm up, to heat",
     "de": "erwärmen",
     "article": null,
-    "pos": "other",
+    "pos": "verb",
     "category": "animals and nature",
     "difficulty": 3,
     "example_de": "",
@@ -20664,7 +20664,7 @@
   {
     "id": "1589",
     "en": "eco-comparison",
-    "de": "Ökovergkeich",
+    "de": "Ökovergleich",
     "article": "der",
     "pos": "noun",
     "category": "animals and nature",
@@ -20783,7 +20783,7 @@
     "en": "to be available",
     "de": "erhältlich",
     "article": null,
-    "pos": "verb",
+    "pos": "adjective",
     "category": "animals and nature",
     "difficulty": 3,
     "example_de": "",
@@ -22418,10 +22418,10 @@
   },
   {
     "id": "1724",
-    "en": "to be worth living in",
+    "en": "worth living in",
     "de": "lebenswert",
     "article": null,
-    "pos": "verb",
+    "pos": "adjective",
     "category": "city and society",
     "difficulty": 3,
     "example_de": "",
@@ -22522,10 +22522,10 @@
   },
   {
     "id": "1732",
-    "en": "to be expected",
-    "de": "vorgaussichtlich",
+    "en": "expected, anticipated",
+    "de": "voraussichtlich",
     "article": null,
-    "pos": "verb",
+    "pos": "adjective",
     "category": "city and society",
     "difficulty": 4,
     "example_de": "",
@@ -22798,7 +22798,7 @@
   {
     "id": "1753",
     "en": "rhythm",
-    "de": "Rhythmus, Rhythmen",
+    "de": "Rhythmus",
     "article": "der",
     "pos": "noun",
     "category": "city and society",
@@ -23136,7 +23136,7 @@
   {
     "id": "1779",
     "en": "internationalism",
-    "de": "Internationalismus, Internationalismen",
+    "de": "Internationalismus",
     "article": "der",
     "pos": "noun",
     "category": "city and society",
@@ -24513,10 +24513,10 @@
   },
   {
     "id": "1885",
-    "en": "roared",
+    "en": "to roar",
     "de": "brüllen",
     "article": null,
-    "pos": "other",
+    "pos": "verb",
     "category": "health and body",
     "difficulty": 3,
     "example_de": "",
@@ -25826,7 +25826,7 @@
   },
   {
     "id": "1986",
-    "en": "restriction",
+    "en": "connective, conjunction",
     "de": "Konnektor",
     "article": "der",
     "pos": "noun",
@@ -26295,7 +26295,7 @@
   {
     "id": "2022",
     "en": "mansion",
-    "de": "Villa, Villen",
+    "de": "Villa",
     "article": "die",
     "pos": "noun",
     "category": "health and body",
@@ -26372,7 +26372,7 @@
   },
   {
     "id": "2028",
-    "en": "espresso can",
+    "en": "espresso pot",
     "de": "Espressokanne",
     "article": "die",
     "pos": "noun",
@@ -26386,7 +26386,7 @@
   {
     "id": "2029",
     "en": "graffiti",
-    "de": "Graffito, Graffiti",
+    "de": "Graffito",
     "article": "das",
     "pos": "noun",
     "category": "culture, media and art",
@@ -27205,7 +27205,7 @@
   {
     "id": "2092",
     "en": "to lie around",
-    "de": "rumliegn",
+    "de": "rumliegen",
     "article": null,
     "pos": "verb",
     "category": "culture, media and art",
@@ -27530,7 +27530,7 @@
   {
     "id": "2117",
     "en": "virus",
-    "de": "Virus, Viren",
+    "de": "Virus",
     "article": "das",
     "pos": "noun",
     "category": "culture, media and art",
@@ -27685,7 +27685,7 @@
   },
   {
     "id": "2129",
-    "en": "forgivable",
+    "en": "futile, in vain",
     "de": "vergeblich",
     "article": null,
     "pos": "other",
@@ -28949,7 +28949,7 @@
   {
     "id": "2226",
     "en": "organiser",
-    "de": "Organisator, Organisatoren",
+    "de": "Organisator",
     "article": "der",
     "pos": "noun",
     "category": "city and society",
@@ -29469,7 +29469,7 @@
   {
     "id": "2266",
     "en": "speed",
-    "de": "Tempo, Tempi",
+    "de": "Tempo",
     "article": "das",
     "pos": "noun",
     "category": "places and travel",
@@ -29859,7 +29859,7 @@
   {
     "id": "2296",
     "en": "social worker",
-    "de": "Soziqlarbeiter",
+    "de": "Sozialarbeiter",
     "article": "der",
     "pos": "noun",
     "category": "places and travel",
@@ -31317,7 +31317,7 @@
   {
     "id": "2408",
     "en": "across-the-board",
-    "de": "pauschgl",
+    "de": "pauschal",
     "article": null,
     "pos": "other",
     "category": "money and banking",
